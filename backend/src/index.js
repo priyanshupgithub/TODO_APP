@@ -3,11 +3,19 @@ import dotenv from "dotenv";
 import connectDb from "./database/database.js";
 import todoRoute from "./routes/todo-route.js"
 import userRoute from "./routes/user-route.js"
+import cors from "cors"
 
-const app = express();
-app.use(express.json())
 dotenv.config();
+const app = express();
+app.use(cors({
+  origin:process.env.FRONTEND_URL,
+  credentials:true,
+  methods:"GET,POST,PUT,DELETE",
+  allowedHeaders :["Content-Type", "Authorization"]
+}))
+app.use(express.json())
 const PORT = process.env.PORT;
+
 
 connectDb()
   .then(() => {
