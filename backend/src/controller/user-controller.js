@@ -1,15 +1,15 @@
-import User from "../model/user.model.js";
+import User from "../models/user-model.js";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSaveInCookies } from "../jwt/token.js";
 const userSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z.string().email({ message: "Invalid email address " }),
   username: z
     .string()
-    .min(3, { message: "Username alteast 3 characters long" }),
+    .min(3, { message: "Username alteast 3 characters long " }),
   password: z
     .string()
-    .min(6, { message: "Password alteast 6 characters long" }),
+    .min(6, { message: "Password alteast 6 characters long " }),
 });
 
 export const register = async (req, res) => {
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ errors: "All fields are required" });
     }
     const user = await User.findOne({ email }).select("+password");
     if (!user || !(await bcrypt.compare(password, user.password))) {

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../model/user.model.js";
+import User from "../models/user-model.js";
 export const generateTokenAndSaveInCookies = async (userId, res) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
     expiresIn: "10d",

@@ -4,7 +4,7 @@ import {
   deleteTodo,
   getTodos,
   updateTodo,
-} from "../controller/todo.controller.js";
+} from "../controller/todo-controller.js";
 import { authenticate } from "../middleware/authorize.js";
 
 const router = express.Router();
