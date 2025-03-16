@@ -1,26 +1,28 @@
-import Todo from "../models/todo-model.js";
+import Todo from "../model/todo.model.js";
 
 export const createTodo = async (req, res) => {
   const todo = new Todo({
     text: req.body.text,
     completed: req.body.completed,
+    user: req.user._id, // associate todo with loggedin user
   });
+
   try {
     const newTodo = await todo.save();
-    res.status(201).json({ message: "Todo created successfully.", newTodo });
+    res.status(201).json({ message: "Todo Created Successfully", newTodo });
   } catch (error) {
-    console.log(error.message);
-    res.status(400).json({ message: "Error occuring in Todo creation", error });
+    console.log(error);
+    res.status(400).json({ message: "Error occuring in todo creation" });
   }
 };
 
-export const getTodo = async (req, res) => {
+export const getTodos = async (req, res) => {
   try {
-    const todos = await Todo.find();
-    res.status(201).json({ message: "Todo fetched successfully.", todos });
+    const todos = await Todo.find({ user: req.user._id }); // fetch todos only for loggedin user.
+    res.status(201).json({ message: "Todo Fetched Successfully", todos });
   } catch (error) {
-    console.log(error.message);
-    res.status(400).json({ message: "Error occuring in Todo fetching", error });
+    console.log(error);
+    res.status(400).json({ message: "Error occuring in todo fetching" });
   }
 };
 
@@ -29,24 +31,22 @@ export const updateTodo = async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(201).json({ message: "Todo Updated successfully.", todo });
+    res.status(201).json({ message: "Todo Updated Successfully", todo });
   } catch (error) {
-    console.log(error.message);
-    res.status(400).json({ message: "Error occuring in Todo Updating", error });
+    console.log(error);
+    res.status(400).json({ message: "Error occuring in todo updating" });
   }
 };
 
-
 export const deleteTodo = async (req, res) => {
-    try {
-      const todo = await Todo.findByIdAndDelete(req.params.id);
-      if(!todo){
-        return res.status(404).json({message:"Todo not found."})
-      }
-      res.status(201).json({ message: "Todo Deleted successfully.", todo });
-    } catch (error) {
-      console.log(error.message);
-      res.status(400).json({ message: "Error occuring in Todo Deletion", error });
+  try {
+    const todo = await Todo.findByIdAndDelete(req.params.id);
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
     }
-  };
-  
+    res.status(201).json({ message: "Todo Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: "Error occuring in todo Deletion" });
+  }
+};
